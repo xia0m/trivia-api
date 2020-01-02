@@ -230,10 +230,10 @@ def create_app(test_config=None):
     def play_quiz():
         body = request.get_json()
 
-        previous_questions = body.get('previous_questions', None)
-        quiz_category = body.get('quiz_category', None)
+        previous_questions = body.get('previous_questions', [])
+        quiz_category = body.get('quiz_category', {})
 
-        if quiz_category['id'] == 0:
+        if int(quiz_category['id']) == 0:
             questions = Question.query.all()
         else:
             questions = Question.query.filter_by(

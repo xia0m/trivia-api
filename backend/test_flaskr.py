@@ -157,6 +157,38 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
+    def test_playing_quiz(self):
+        res = self.client().post('/api/quizzes', json={
+            'previous_questions': [],
+            'quiz_category': {'id': '1', 'type': 'Science'}
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['question'])
+
+    def test_playing_quiz_return_404(self):
+        res = self.client().post('/api/quizzes', json={
+            'previous_questions': [],
+            'quiz_category': {'id': '7', 'type': 'Science'}
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
+
+    def test_405_error(self):
+        res = self.client().post('/api/categories', json={
+            'data': 'test'
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 405)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Method Not Allowed')
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
