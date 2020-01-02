@@ -145,6 +145,7 @@ def create_app(test_config=None):
         new_answer = body.get('answer', None)
         new_difficulty = body.get('difficulty', 1)
         new_category = body.get('category', 1)
+
         try:
 
             question = Question(question=new_question, answer=new_answer,
@@ -179,6 +180,8 @@ def create_app(test_config=None):
         query_results = Question.query.filter(
             Question.question.like(f"%{term}%")).order_by(Question.id).all()
         questions = [question.format() for question in query_results]
+        if len(questions) == 0:
+            questions = None
         return jsonify({
             'success': True,
             'questions': questions,
@@ -204,12 +207,12 @@ def create_app(test_config=None):
             abort(404)
 
         current_category = Category.query.get(category_id)
-        print(current_category)
+
         return jsonify({
             'success': True,
             'questions': formated_questions,
             'total_questions': len(selections),
-            'current_category': 'Test'
+            'current_category': current_category.type
         })
 
     '''
