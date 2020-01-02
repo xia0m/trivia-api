@@ -197,7 +197,7 @@ def create_app(test_config=None):
 		categories in the left column will cause only questions of that
 		category to be shown.
 		'''
-    @app.route('/api/categories/<int:category_id>/questions', methods=['GET'])
+    @app.route('/api/categories/<category_id>/questions', methods=['GET'])
     def retrieve_books_by_category(category_id):
         selections = Question.query.filter_by(
             category=category_id).all()
